@@ -95,11 +95,14 @@ function GetCloseCoins(Coin)
 end
 n(bling,"MM2 CoinFarm Loaded",5)
 if Settings.CoinCollector then
-	local CoinIndex = 1
-	local Current = 0
 	while task.wait(1) do
 	ScanCoins()
 		if Farm.CoinContainer then
+			for i, v in ipairs(Farm.CoinContainer.Parent:GetDescendants()) do
+				if v.Name == "GlitchProof" then
+					v:Destroy()
+				end
+			end
 			for i, v in ipairs(Farm.CoinContainer:GetChildren()) do
 				ScanCoins()
 				task.wait()
