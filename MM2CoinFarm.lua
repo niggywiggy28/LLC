@@ -32,6 +32,7 @@ function n(t, m, d)
         }
     )
 end
+
 task.delay(5,function()
 	Player.PlayerGui:FindFirstChild("Loading").Enabled = false
 	if Player.PlayerGui:FindFirstChild("Join") then
@@ -69,7 +70,7 @@ end
 function SafeSpot()
 	Player.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(Player.Character:WaitForChild("HumanoidRootPart").Position+Settings.SafeSpotOffset)
 end
-
+n(bling,"MM2 CoinFarm Loaded",5)
 if Settings.CoinCollector then
 	local CoinIndex = 1
 	local Current = 0
