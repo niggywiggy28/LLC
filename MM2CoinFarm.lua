@@ -7,6 +7,7 @@ local Settings = {
 	Delay = 2,
 	SafeDelay = 0.4,
 	NearbyRadius = 10,
+	NearbyDelay = 0.2,
 	SafeSpotOffset = Vector3.new(0,30,0),
 	TweenSettings = {
 		TweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear),
@@ -86,7 +87,8 @@ function GetCloseCoins(Coin)
 	if Farm.CoinContainer then
 		for i, v in ipairs(Farm.CoinContainer:GetChildren()) do
 			if v:IsA("BasePart") and arePartsWithinRadius(Coin,v,Settings.NearbyRadius) then
-				firetouchinterest(v,Player.Character:FindFirstChild("HumanoidRootPart"),0)
+				task.spawn(function() TeleportTo(v) end)
+				task.wait(Settings.NearbyDelay)
 			end
 		end
 	end
@@ -105,7 +107,8 @@ if Settings.CoinCollector then
 					break
 				end
 				if v:IsA("BasePart") and v:FindFirstChild("CoinVisual") and v.CoinVisual["2Part"].Transparency == 0 then
-					task.spawn(function() TeleportTo(v) GetCloseCoins(v) end)
+					task.spawn(function() TeleportTo(v) end)
+					GetCloseCoins(v)
 					task.wait(Settings.SafeDelay)
 					task.spawn(function() SafeSpot() end)
 					task.wait(Settings.Delay)
