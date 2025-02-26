@@ -32,12 +32,22 @@ function n(t, m, d)
         }
     )
 end
-
-local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
-Player.OnTeleport:Connect(function(State)
-	queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()")
+task.delay(5,function()
+	Player.PlayerGui:FindFirstChild("Loading").Enabled = false
+	if Player.PlayerGui:FindFirstChild("Join") then
+		Player.PlayerGui:FindFirstChild("Join").Enabled = false
+	end
 end)
-
+local GuiService = game:GetService("GuiService")
+local TeleportService = game:GetService("TeleportService")
+local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
+local PlaceId, JobId = game.PlaceId, game.JobId
+Player.OnTeleport:Connect(function()
+	queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/niggywiggy28/LLC/refs/heads/main/MM2CoinFarm.lua'))()")
+end)
+GuiService.ErrorMessageChanged:Connect(function()
+	TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Player)
+end)
 
 function ScanCoins()
 	Farm.Coins = {}
