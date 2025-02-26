@@ -98,7 +98,7 @@ if Settings.CoinCollector then
 	while task.wait(1) do
 	ScanCoins()
 		if Farm.CoinContainer then
-			for i, v in ipairs(Farm.CoinContainer.Parent:GetDescendants()) do
+			for i, v in pairs(workspace:GetDescendants()) do
 				if v.Name == "GlitchProof" then
 					v:Destroy()
 				end
