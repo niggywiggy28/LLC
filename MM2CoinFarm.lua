@@ -1,6 +1,8 @@
 local TweenService = game:GetService("TweenService")
 local Player = game.Players.LocalPlayer
 local Settings = {
+	ExecuteOnTeleport = false, -- Executes if teleported/rejoin
+	RejoinOnKick = false,
 	CoinCollector = true, -- Coin Collector Toggle
 	Delay = 2,
 	SafeDelay = 0.4,
@@ -34,7 +36,9 @@ function n(t, m, d)
 end
 
 task.delay(5,function()
-	Player.PlayerGui:FindFirstChild("Loading").Enabled = false
+	if Player.PlayerGui:FindFirstChild("Loading") then
+		Player.PlayerGui:FindFirstChild("Loading").Enabled = false
+	end
 	if Player.PlayerGui:FindFirstChild("Join") then
 		Player.PlayerGui:FindFirstChild("Join").Enabled = false
 	end
@@ -43,12 +47,16 @@ local GuiService = game:GetService("GuiService")
 local TeleportService = game:GetService("TeleportService")
 local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
 local PlaceId, JobId = game.PlaceId, game.JobId
-Player.OnTeleport:Connect(function()
-	queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/niggywiggy28/LLC/refs/heads/main/MM2CoinFarm.lua'))()")
-end)
-GuiService.ErrorMessageChanged:Connect(function()
-	TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Player)
-end)
+if Settings.ExecuteOnTeleport then
+	Player.OnTeleport:Connect(function()
+		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/niggywiggy28/LLC/refs/heads/main/MM2CoinFarm.lua'))()")
+	end)
+end
+if Settings.RejoinOnKick then
+	GuiService.ErrorMessageChanged:Connect(function()
+		TeleportService:TeleportToPlaceInstance(PlaceId, JobId, Player)
+	end)
+end
 
 function ScanCoins()
 	Farm.Coins = {}
