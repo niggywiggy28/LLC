@@ -1,11 +1,12 @@
 local TweenService = game:GetService("TweenService")
 local Player = game.Players.LocalPlayer
 local Settings = {
-	ExecuteOnTeleport = false, -- Executes if teleported/rejoin
-	RejoinOnKick = false,
+	ExecuteOnTeleport = true, -- Executes if teleported/rejoin
+	RejoinOnKick = true,
 	CoinCollector = true, -- Coin Collector Toggle
 	Delay = 2,
 	SafeDelay = 0.4,
+	NearbyRadius = 10,
 	SafeSpotOffset = Vector3.new(0,30,0),
 	TweenSettings = {
 		TweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear),
@@ -78,6 +79,18 @@ end
 function SafeSpot()
 	Player.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(Player.Character:WaitForChild("HumanoidRootPart").Position+Settings.SafeSpotOffset)
 end
+function arePartsWithinRadius(part1, part2, radius)
+    return (part1.Position - part2.Position).Magnitude <= radius
+end
+function GetCloseCoins(Coin)
+	if Farm.CoinContainer then
+		for i, v in ipairs(Farm.CoinContainer:GetChildren()) do
+			if v:IsA("BasePart") and arePartsWithinRadius(Coin,v,Settings.NearbyRadius) then
+				firetouchinterest(v,Player.Character:FindFirstChild("HumanoidRootPart"),0)
+			end
+		end
+	end
+end
 n(bling,"MM2 CoinFarm Loaded",5)
 if Settings.CoinCollector then
 	local CoinIndex = 1
@@ -92,7 +105,7 @@ if Settings.CoinCollector then
 					break
 				end
 				if v:IsA("BasePart") and v:FindFirstChild("CoinVisual") and v.CoinVisual["2Part"].Transparency == 0 then
-					task.spawn(function() TeleportTo(v) end)
+					task.spawn(function() TeleportTo(v) GetCloseCoins(v) end)
 					task.wait(Settings.SafeDelay)
 					task.spawn(function() SafeSpot() end)
 					task.wait(Settings.Delay)
